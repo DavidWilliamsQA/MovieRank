@@ -1,27 +1,25 @@
 package com.qa.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "movies_table")
 public class Movies {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long movie_id;
     private String title;
     private String releaseYear;
     private String director;
 
-    public Long getId() {
-        return id;
+    public Long getMovie_id() {
+        return movie_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMovie_id(Long movie_id) {
+        this.movie_id = movie_id;
     }
 
     public String getTitle() {
@@ -53,7 +51,7 @@ public class Movies {
         if (this == o) return true;
         if (!(o instanceof Movies)) return false;
         Movies movies = (Movies) o;
-        return getId().equals(movies.getId()) &&
+        return getMovie_id().equals(movies.getMovie_id()) &&
                 getTitle().equals(movies.getTitle()) &&
                 getReleaseYear().equals(movies.getReleaseYear()) &&
                 getDirector().equals(movies.getDirector());
@@ -61,6 +59,6 @@ public class Movies {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTitle(), getReleaseYear(), getDirector());
+        return Objects.hash(getMovie_id(), getTitle(), getReleaseYear(), getDirector());
     }
 }

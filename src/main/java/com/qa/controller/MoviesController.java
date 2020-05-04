@@ -14,8 +14,8 @@ public class MoviesController {
     private final MovieService service;
 
     @Autowired
-    public MoviesController(MovieService movie) {
-        this.service = movie;
+    public MoviesController(MovieService service) {
+        this.service = service;
     }
 
     @GetMapping("/getAllMovies")
@@ -28,7 +28,7 @@ public class MoviesController {
         return this.service.createMovie(movie);
     }
 
-    @DeleteMapping("/deleteMovie")
+    @DeleteMapping("/deleteMovie/{id}")
     public boolean deleteMovie(@PathVariable Long id){
         return this.service.deleteMovie(id);
     }
