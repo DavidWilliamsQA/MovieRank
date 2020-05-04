@@ -22,12 +22,28 @@ public class MovieService {
         return this.movie.findAll();
     }
 
-    public Movies createMovie(Movies movie) {
-        return this.movie.save(movie);
+    public Movies createMovie(Movies movies) {
+        return this.movie.save(movies);
     }
 
     public Movies findMovieById(Long id) {
         return this.movie.findById(id).orElseThrow(MovieNotFoundException::new);
+    }
+
+    public Movies updateMovie(Long id, Movies movies){
+        Movies update = findMovieById(id);
+        update.setTitle(movies.getTitle());
+        update.setReleaseYear(movies.getReleaseYear());
+        update.setDirector(movies.getDirector());
+        return this.movie.save(update);
+    }
+
+    public boolean deleteMovie(Long id){
+        if(!this.movie.existsById(id)){
+            throw new MovieNotFoundException();
+        }
+        this.movie.deleteById(id);
+        return this.movie.existsById(id);
     }
 
 }
