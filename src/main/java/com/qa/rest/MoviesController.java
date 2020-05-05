@@ -1,8 +1,11 @@
 package com.qa.rest;
 
 import com.qa.domain.Movies;
+import com.qa.dto.MovieDTO;
 import com.qa.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -19,32 +22,34 @@ public class MoviesController {
     }
 
     @GetMapping("/getAllMovies")
-    public List<Movies> getAllMovies(){
-        return this.service.readMovies();
+    public ResponseEntity<List<MovieDTO>> getAllMovies(){
+        return ResponseEntity.ok(this.service.readMovies());
     }
 
     @PostMapping("/createMovies")
-    public Movies createMovie(@RequestBody Movies movie){
-        return this.service.createMovie(movie);
+    public ResponseEntity<MovieDTO> createMovie(@RequestBody Movies movie){
+        return new ResponseEntity<MovieDTO>(this.service.createMovie(movie), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/deleteMovie/{id}")
-    public boolean deleteMovie(@PathVariable Long id){
-        return this.service.deleteMovie(id);
+    public ResponseEntity<?> deleteMovie(@PathVariable Long id){
+        return this.service.deleteMovie(id)
+                ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+                : ResponseEntity.noContent().build();
     }
 
     @GetMapping("/getMovieById/{id}")
-    public Movies getMovieById(@PathVariable Long id){
-        return this.service.findMovieById(id);
+    public ResponseEntity<MovieDTO> getMovieById(@PathVariable Long id){
+        return ResponseEntity.ok(this.service.findMovieById(id));
     }
 
     @PutMapping("/updateMovie/{id}")
-    public Movies updateMovieById(@PathVariable Long id, @RequestBody Movies movie){
-        return this.service.updateMovie(id,movie);
+    public ResponseEntity<MovieDTO> updateMovieById(@PathVariable Long id, @RequestBody Movies movie){
+        return ResponseEntity.ok(this.service.updateMovie(id,movie));
     }
 
     @PutMapping("/updateMovie2")
-    public Movies updateMovies(@PathParam("id") Long id, @RequestBody Movies movie){
-        return this.service.updateMovie(id, movie);
+    public ResponseEntity<MovieDTO> updateMovies(@PathParam("id") Long id, @RequestBody Movies movie){
+        return ResponseEntity.ok(this.service.updateMovie(id, movie));
     }
 }
