@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.persistence.EntityNotFoundException;
 
 
-@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "The movie doesn't exist")
-public class MovieNotFoundException extends EntityNotFoundException {
+@ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "The cinema doesn't exist")
+public class CinemaNotFoundException extends EntityNotFoundException {
 }

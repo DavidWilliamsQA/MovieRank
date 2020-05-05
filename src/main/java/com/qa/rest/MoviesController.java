@@ -1,4 +1,4 @@
-package com.qa.controller;
+package com.qa.rest;
 
 import com.qa.domain.Movies;
 import com.qa.services.MovieService;
