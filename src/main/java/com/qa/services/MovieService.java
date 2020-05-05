@@ -39,7 +39,7 @@ public class MovieService {
     }
 
     public MovieDTO findMovieById(Long id) {
-        return this.mapToDTO(repo.findById(id).orElseThrow(MovieNotFoundException::new));
+        return this.mapToDTO(this.repo.findById(id).orElseThrow(MovieNotFoundException::new));
     }
 
     public MovieDTO updateMovie(Long id, Movies movies){
@@ -47,7 +47,8 @@ public class MovieService {
         update.setTitle(movies.getTitle());
         update.setReleaseYear(movies.getReleaseYear());
         update.setDirector(movies.getDirector());
-        return this.mapToDTO(update);
+        Movies tempMovie = this.repo.save(movies);
+        return this.mapToDTO(tempMovie);
     }
 
     public boolean deleteMovie(Long id){

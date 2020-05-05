@@ -1,50 +1,60 @@
 package com.qa.services;
 
 import com.qa.domain.Cinemas;
-import com.qa.domain.Movies;
+import com.qa.dto.CinemaDTO;
 import com.qa.exceptions.CinemaNotFoundException;
 import com.qa.exceptions.MovieNotFoundException;
 import com.qa.repo.CinemaRepository;
-import com.qa.repo.MoviesRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CinemaService {
 
-    private final CinemaRepository cinema;
+    private final CinemaRepository repo;
+
+    private final ModelMapper mapper;
 
     @Autowired
-    public CinemaService(CinemaRepository cinema) {
-        this.cinema = cinema;
+    public CinemaService(CinemaRepository cinema, ModelMapper mapper) {
+        this.repo = cinema;
+        this.mapper = mapper;
     }
 
-    public List<Cinemas> readCinema() {
-        return this.cinema.findAll();
+    private CinemaDTO mapToDTO(Cinemas cinemas){
+        return this.mapper.map(cinemas, CinemaDTO.class);
     }
 
-    public Cinemas createCinema(Cinemas cinema) {
-        return this.cinema.save(cinema);
+    public List<CinemaDTO> readCinema() {
+        return this.repo.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
-    public Cinemas findCinemaById(Long id) {
-        return this.cinema.findById(id).orElseThrow(MovieNotFoundException::new);
+    public CinemaDTO createCinema(Cinemas cinema) {
+        Cinemas tempCinema =  this.repo.save(cinema);
+        return this.mapToDTO(tempCinema);
     }
 
-    public Cinemas updateCinema(Long id, Cinemas cinemas){
-        Cinemas update = findCinemaById(id);
+    public CinemaDTO findCinemaById(Long id) {
+        return this.mapToDTO(this.repo.findById(id).orElseThrow(MovieNotFoundException::new));
+    }
+
+    public CinemaDTO updateCinema(Long id, Cinemas cinemas){
+        Cinemas update = this.repo.findById(id).orElseThrow(MovieNotFoundException::new);
         update.setLocation(cinemas.getLocation());
-        return this.cinema.save(update);
+        Cinemas tempCinema = this.repo.save(cinemas);
+        return this.mapToDTO(tempCinema);
     }
 
     public boolean deleteCinema(Long id){
-        if(!this.cinema.existsById(id)){
+        if(!this.repo.existsById(id)){
             throw new CinemaNotFoundException();
         }
-        this.cinema.deleteById(id);
-        return this.cinema.existsById(id);
+        this.repo.deleteById(id);
+        return this.repo.existsById(id);
     }
 
 }
