@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "movies_table")
+//@Table(name = "movies_table")
 public class Movies {
 
     @Id
@@ -13,6 +13,9 @@ public class Movies {
     private String title;
     private String releaseYear;
     private String director;
+
+    @ManyToOne(targetEntity = Cinemas.class)
+    private Cinemas cinemaName;
 
     public Long getMovie_id() {
         return movie_id;
@@ -46,6 +49,14 @@ public class Movies {
         this.director = director;
     }
 
+    public Cinemas getCinemaName() {
+        return cinemaName;
+    }
+
+    public void setCinemaName(Cinemas cinemaName) {
+        this.cinemaName = cinemaName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,11 +65,12 @@ public class Movies {
         return getMovie_id().equals(movies.getMovie_id()) &&
                 getTitle().equals(movies.getTitle()) &&
                 getReleaseYear().equals(movies.getReleaseYear()) &&
-                getDirector().equals(movies.getDirector());
+                getDirector().equals(movies.getDirector()) &&
+                getCinemaName().equals(movies.getCinemaName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getMovie_id(), getTitle(), getReleaseYear(), getDirector());
+        return Objects.hash(getMovie_id(), getTitle(), getReleaseYear(), getDirector(), getCinemaName());
     }
 }
