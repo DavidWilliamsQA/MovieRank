@@ -2,8 +2,11 @@ package com.qa.rest;
 
 import com.qa.domain.Cinemas;
 import com.qa.domain.Movies;
+import com.qa.dto.CinemaDTO;
 import com.qa.services.CinemaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -20,33 +23,35 @@ public class CinemasController {
     }
 
     @GetMapping("/getAllCinemas")
-    public List<Cinemas> getAllCinemas(){
-        return this.service.readCinema();
+    public ResponseEntity<List<CinemaDTO>> getAllCinemas(){
+        return ResponseEntity.ok(this.service.readCinema());
     }
 
     @PostMapping("/createCinemas")
-    public Cinemas createCinema(@RequestBody Cinemas cinemas){
-        return this.service.createCinema(cinemas);
+    public ResponseEntity<CinemaDTO> createCinema(@RequestBody Cinemas cinemas){
+        return new ResponseEntity<CinemaDTO>(this.service.createCinema(cinemas), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/deleteCinema/{id}")
-    public boolean deleteCinema(@PathVariable Long id){
-        return this.service.deleteCinema(id);
+    public ResponseEntity<?> deleteCinema(@PathVariable Long id){
+        return this.service.deleteCinema(id)
+                ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+                : ResponseEntity.noContent().build();
     }
 
     @GetMapping("/getCinemaById/{id}")
-    public Cinemas getCinemaById(@PathVariable Long id){
-        return this.service.findCinemaById(id);
+    public ResponseEntity<CinemaDTO> getCinemaById(@PathVariable Long id){
+        return ResponseEntity.ok(this.service.findCinemaById(id));
     }
 
     @PutMapping("/updateCinema/{id}")
-    public Cinemas updateCinemaById(@PathVariable Long id, @RequestBody Cinemas cinemas){
-        return this.service.updateCinema(id,cinemas);
+    public ResponseEntity<CinemaDTO> updateCinemaById(@PathVariable Long id, @RequestBody Cinemas cinemas){
+        return ResponseEntity.ok(this.service.updateCinema(id,cinemas));
     }
 
     @PutMapping("/updateCinema2")
-    public Cinemas updateMovies(@PathParam("id") Long id, @RequestBody Cinemas cinemas){
-        return this.service.updateCinema(id, cinemas);
+    public ResponseEntity<CinemaDTO> updateMovies(@PathParam("id") Long id, @RequestBody Cinemas cinemas){
+        return ResponseEntity.ok(this.service.updateCinema(id, cinemas));
     }
 
 
